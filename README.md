@@ -187,19 +187,19 @@ User Query (Multi-turn)
 | 버전 | MAP | MRR | 핵심 변경 | 결과 | 인사이트 |
 |------|-----|-----|-----------|------|----------|
 | v0_baseline_solar | 0.3765 | 0.3758 | 베이스라인 코드에서 LLM을 Solar로 교체 | — | 환경 설정 오류 다수 발생 (호환성, 결과물 호출 등) |
-| v1_classify_topk | 0.3515 | 0.3545 | LLM이 과학 질문 여부 판별 후 JSON 반환 | ⬇️ 하락 | 의도 분류는 좋으나, JSON 파싱 오류로 대부분 `topk=[]` 반환 |
-| v2_hybridsearch | 0.5614 | 0.5636 | Hybrid(BM25+Dense) 검색 + RRF + 프롬프트 개선 + solar-pro3 | ⬆️ 향상 | Function Calling 전환으로 의도 분류 안정화 |
-| v3_multiturn_hyde | 0.7894 | 0.7939 | 멀티턴 Standalone Query + HyDE 도입 | ⬆️ 향상 | HyDE 가상 문서 → Dense 쿼리, 원본 → Sparse 쿼리 분리가 핵심 |
-| v4_rerank | 0.8462 | 0.8455 | Cross-Encoder Reranking (후보 10개 → Top-3) | ⬆️ 향상 | `BAAI/bge-reranker-v2-m3`, 후보 확보 후 정밀 선별 효과 입증 |
-| **v5_nori_bm25** | **0.8962** | **0.9015** | **Nori 형태소 분석기 BM25 적용 + HyDE 키워드 BM25 투입** | ⬆️ **개인 SOTA** | HyDE 유의어와 원본 키워드를 동시에 BM25에 활용 |
-| v6_add_refresh | 0.8159 | 0.8212 | BM25는 standalone_query만 + ES refresh 명시 | ⬇️ 하락 | HyDE 키워드가 BM25 검색 범위를 오히려 풍부하게 했음을 역확인 |
-| v7_bge_m3 | 0.8886 | 0.8924 | 임베딩 모델 KR-SBERT(768d) → bge-m3(1024d) | ⬇️ 하락 | 차원 불일치로 재인덱싱 필수. 모델 교체가 성능 향상을 보장하지 않음 |
-| v7-1_cosine | 0.8841 | 0.8894 | bge-m3 유사도 l2_norm → cosine으로 변경 | ⬇️ 하락 | 올바른 메트릭 적용에도 bge-m3 효과 없음 → KR-SBERT 복귀 |
-| v5-1_weighted | 0.7614 | 0.7667 | Sparse 가중치 1.5배 상향 | ⬇️ 대폭 하락 | Dense의 의미 매칭 강점이 희석됨. 1:1 균형이 최적임을 재확인 |
-| v8_chunking | 0.8902 | 0.8924 | 512 토큰 초과 문서만 문장 단위 청킹 + overlap=1 | ⬇️ SOTA 대비 하락 | 청킹 조각들이 Top-K 독점 → Top-K 밀림 현상 발생 |
-| v8-2_BM25_standalone | 0.8803 | 0.8833 | Reranker 후보 15→30, BM25는 원본 쿼리만 | ⬇️ 하락 | Nori+HyDE 키워드 조합이 풍부한 어휘를 제공했음을 재확인 |
-| v9_prompt_optimized | 0.8636 | 0.8697 | Few-shot 강화 + RRF 가중치 비대칭 (Sparse 0.65) | ⬇️ 하락 | 가중치 비대칭이 성능 저하 주원인. 1:1 유지가 안전 |
-| v10_dongjin_reranker | 0.9038 | 0.9061 | 한국어 특화 Reranker + LLM 키워드 추출 BM25 투입 | ⬆️ 향상 | Reranker 후보 줄이면 Cross-encoder 분별력 향상 |
+| v1_classify_topk | 0.3515 | 0.3545 | LLM이 과학 질문 여부 판별 후 JSON 반환 | ⬇️ | 의도 분류는 좋으나, JSON 파싱 오류로 대부분 `topk=[]` 반환 |
+| v2_hybridsearch | 0.5614 | 0.5636 | Hybrid(BM25+Dense) 검색 + RRF + 프롬프트 개선 + solar-pro3 | ⬆️ | Function Calling 전환으로 의도 분류 안정화 |
+| v3_multiturn_hyde | 0.7894 | 0.7939 | 멀티턴 Standalone Query + HyDE 도입 | ⬆️ | HyDE 가상 문서 → Dense 쿼리, 원본 → Sparse 쿼리 분리가 핵심 |
+| v4_rerank | 0.8462 | 0.8455 | Cross-Encoder Reranking (후보 10개 → Top-3) | ⬆️ | `BAAI/bge-reranker-v2-m3`, 후보 확보 후 정밀 선별 효과 입증 |
+| **v5_nori_bm25** | **0.8962** | **0.9015** | **Nori 형태소 분석기 BM25 적용 + HyDE 키워드 BM25 투입** | ⬆️ | HyDE 유의어와 원본 키워드를 동시에 BM25에 활용 |
+| v6_add_refresh | 0.8159 | 0.8212 | BM25는 standalone_query만 + ES refresh 명시 | ⬇️ | HyDE 키워드가 BM25 검색 범위를 오히려 풍부하게 했음을 역확인 |
+| v7_bge_m3 | 0.8886 | 0.8924 | 임베딩 모델 KR-SBERT(768d) → bge-m3(1024d) | ⬇️ | 차원 불일치로 재인덱싱 필수. 모델 교체가 성능 향상을 보장하지 않음 |
+| v7-1_cosine | 0.8841 | 0.8894 | bge-m3 유사도 l2_norm → cosine으로 변경 | ⬇️ | 올바른 메트릭 적용에도 bge-m3 효과 없음 → KR-SBERT 복귀 |
+| v5-1_weighted | 0.7614 | 0.7667 | Sparse 가중치 1.5배 상향 | ⬇️ | Dense의 의미 매칭 강점이 희석됨. 1:1 균형이 최적임을 재확인 |
+| v8_chunking | 0.8902 | 0.8924 | 512 토큰 초과 문서만 문장 단위 청킹 + overlap=1 | ⬇️ | 청킹 조각들이 Top-K 독점 → Top-K 밀림 현상 발생 |
+| v8-2_BM25_standalone | 0.8803 | 0.8833 | Reranker 후보 15→30, BM25는 원본 쿼리만 | ⬇️ | Nori+HyDE 키워드 조합이 풍부한 어휘를 제공했음을 재확인 |
+| v9_prompt_optimized | 0.8636 | 0.8697 | Few-shot 강화 + RRF 가중치 비대칭 (Sparse 0.65) | ⬇️ | 가중치 비대칭이 성능 저하 주원인. 1:1 유지가 안전 |
+| v10_dongjin_reranker | 0.9038 | 0.9061 | 한국어 특화 Reranker + LLM 키워드 추출 BM25 투입 | ⬆️ | Reranker 후보 줄이면 Cross-encoder 분별력 향상 |
 | **v11_ensemble** | **0.9167** | **0.9152** | **Multi-Query 확장 + ko-reranker & bge-reranker 앙상블 + 2차 검증** | ⬆️ **최종 SOTA** | 다양한 표현의 쿼리 → 재현율 상승. 앙상블로 오류 감소 |
 
 ---
