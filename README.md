@@ -81,7 +81,6 @@ def calc_map(gt, pred):
 
 
 ### Insight 1. 쿼리의 짧음 → Dense Retrieval + Hybrid 전략 필요
----
 
 ![Document & Query Length Distribution](https://github.com/user-attachments/assets/eb659f22-40de-47fe-8189-bba0c8ad18b1)
 
