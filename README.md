@@ -149,7 +149,7 @@ def calc_map(gt, pred):
 ## 🧪 Final SOTA & Experiment Results
 
 ### 🏆 Final SOTA 아키텍처 (v11)
-![RAG Architecture](assets/architecture.png)
+![RAG Architecture](assets/IR_SOTA_architecture.png)
 
 ---
 
