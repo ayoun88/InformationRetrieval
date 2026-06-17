@@ -85,7 +85,11 @@ es_username = "elastic"
 es_password = "Your Elasticsearch Password"
 
 # Elasticsearch client 생성
-es = Elasticsearch(['https://localhost:9200'], basic_auth=(es_username, es_password), ca_certs="./elasticsearch-8.8.0/config/certs/http_ca.crt")
+es = Elasticsearch(
+    ['https://localhost:9200'], 
+    basic_auth=(es_username, es_password), 
+    ca_certs="./elasticsearch-8.8.0/config/certs/http_ca.crt"
+    )
 
 # Elasticsearch client 정보 확인
 print(es.info())
@@ -284,7 +288,13 @@ def eval_rag(eval_filename, output_filename):
             print(f'Answer: {response["answer"]}\n')
 
             # 대회 score 계산은 topk 정보를 사용, answer 정보는 LLM을 통한 자동평가시 활용
-            output = {"eval_id": j["eval_id"], "standalone_query": response["standalone_query"], "topk": response["topk"], "answer": response["answer"], "references": response["references"]}
+            output = {
+                "eval_id": j["eval_id"], 
+                "standalone_query": response["standalone_query"], 
+                "topk": response["topk"], 
+                "answer": response["answer"], 
+                "references": response["references"]
+                }
             of.write(f'{json.dumps(output, ensure_ascii=False)}\n')
             idx += 1
 
