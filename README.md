@@ -83,7 +83,7 @@ def calc_map(gt, pred):
 ### Insight 1. 쿼리의 짧음 → Dense Retrieval + Hybrid 전략 필요
 
 <p align="Left">
-  <img src="assets/EDA_length_distribution.png" width="500">
+  <img src="assets/EDA_length_distribution.png" width="1000">
 </p>
 
 - **분석** : Document 길이는 대부분 **200~400자** 구간에 집중되어 있어 BERT 계열 모델의 Max Sequence Length(512 토큰) 이내에 충분히 들어옵니다. 반면 Query는 **20~30자 내외의 짧은 문장**으로, 정보가 극도로 압축되어 있습니다.
@@ -96,11 +96,11 @@ def calc_map(gt, pred):
 <table align="center">
   <tr>
     <td align="center">
-      <img src="assets/EDA_wordcloud_all.png" width="400"><br>
+      <img src="assets/EDA_wordcloud_all.png" width="500"><br>
       <b>All Words</b>
     </td>
     <td align="center">
-      <img src="assets/EDA_wordcloud_noun.png" width="400"><br>
+      <img src="assets/EDA_wordcloud_noun.png" width="500"><br>
       <b>Nouns Only</b>
     </td>
   </tr>
