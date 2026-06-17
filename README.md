@@ -82,7 +82,9 @@ def calc_map(gt, pred):
 
 ### Insight 1. 쿼리의 짧음 → Dense Retrieval + Hybrid 전략 필요
 
-![Document & Query Length Distribution](https://github.com/user-attachments/assets/eb659f22-40de-47fe-8189-bba0c8ad18b1)
+<p align="Left">
+  <img src="assets/EDA_length_distribution.png" width="500">
+</p>
 
 - **분석** : Document 길이는 대부분 **200~400자** 구간에 집중되어 있어 BERT 계열 모델의 Max Sequence Length(512 토큰) 이내에 충분히 들어옵니다. 반면 Query는 **20~30자 내외의 짧은 문장**으로, 정보가 극도로 압축되어 있습니다.
 - **실험 방향** : 키워드 매칭(BM25)만으로는 동의어·문맥을 파악하기 어렵기 때문에, 의미적 유사도를 계산하는 **Dense Retrieval의 역할이 핵심**임을 확인하고 하이브리드 검색을 베이스 아키텍처로 설정했습니다. 또한, 1,000자 이상 문서는 일부 존재하므로 해당 문서에 한해서만 청킹을 시도하는 전략을 채택했습니다.
@@ -91,7 +93,18 @@ def calc_map(gt, pred):
 
 ### Insight 2. 중복 데이터가 검색 신뢰도를 위협한다
 
-![Duplicate Documents](https://github.com/user-attachments/assets/163cec70-9a44-4e47-aca5-93bae5e3ab8c)
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="assets/EDA_wordcloud_all.png" width="400"><br>
+      <b>All Words</b>
+    </td>
+    <td align="center">
+      <img src="assets/EDA_wordcloud_noun.png" width="400"><br>
+      <b>Nouns Only</b>
+    </td>
+  </tr>
+</table>
 
 - **분석** : `docid`는 다르지만 `content`와 `doc_len`이 완전히 일치하는 중복 문서 쌍이 다수 존재함을 확인했습니다. 이는 ko_mmlu의 train/test 분할 과정에서 동일 지식 단위가 중복 생성된 것으로 추정됩니다.
 - **실험 방향** : 만약 정답 docid가 `2029`인데 모델이 동일한 내용의 `3194`를 찾아낸다면 오답 처리될 위험이 있습니다. 검색 결과 Top-K 내에서 **중복 내용이 연속으로 등장하지 않도록 제어 로직**이 필요하고, 청킹 시에도 동일 원문 조각들이 Top-K를 독차지하는 밀림 현상을 방지해야 한다는 전략을 수립했습니다.
@@ -149,7 +162,7 @@ def calc_map(gt, pred):
 ## 🧪 Final SOTA & Experiment Results
 
 ### 🏆 Final SOTA 아키텍처 (v11)
-<p align="center">
+<p align="Left">
   <img src="assets/IR_SOTA_architecture.png" width="500">
 </p>
 
