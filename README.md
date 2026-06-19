@@ -156,7 +156,7 @@ def calc_map(gt, pred):
 
 - **Nori 형태소 분석기 적용 (v5 — 개인 SOTA)** : ES 인덱스와 동일한 Nori 형태소 분석기를 BM25 검색 쿼리에 적용했습니다. 더불어 HyDE 문서도 형태소 분석을 거쳐 키워드를 추출한 뒤 BM25에 함께 전달함으로써, 질문의 핵심 키워드와 HyDE가 생성한 유의어를 동시에 활용했습니다. MAP 0.8462 → **0.8962**로 상승하여 개인 SOTA를 달성했습니다.
 - **한계 돌파 탐색** : SOTA 달성 이후 임베딩 모델 교체(bge-m3), RRF 가중치 비대칭 실험, 청킹 전략, 프롬프트 튜닝 등 다양한 변인을 통제하며 추가 실험을 진행했습니다. 대부분 기대와 달리 성능이 하락하여 각 실험을 통해 반직관적 인사이트를 축적했습니다.
-- **한국어 Reranker + 키워드 추출 (v10)** : `Dongjin-kr/ko-reranker`로 Reranker를 교체하고, LLM으로 핵심 키워드를 추출하여 BM25에 활용한 결과 MAP 0.9038을 기록했습니다.
+- **한국어 Reranker + 키워드 추출 (v10)** : `Dongjin-kr/ko-reranker`로 Reranker를 교체하고, LLM으로 쿼리핵심 키워드를 추출하여 BM25에 활용한 결과 MAP 0.9038을 기록했습니다. `ko-reranker`는 영→한 기계번역 데이터(MS MARCO, Amazon Translate)로 파인튜닝된 모델인데, 대회 코퍼스 또한 영문 MMLU/ARC 벤치마크를 번역한 데이터이기 때문에 두 데이터의 번역체 특성이 맞아떨어진 것이 성능 향상에 기여했을 것으로 추정합니다.
 - **Multi-Query 확장 + Reranker 앙상블 (v11 — 최종 SOTA)** : 동일 의미의 질문을 LLM으로 다양한 표현으로 N개 생성하여 각각 검색한 뒤 결과를 합산(재현율 향상), `ko-reranker`와 `bge-reranker-v2-m3` 앙상블로 최종 정렬하여 **MAP 0.9167**로 최종 SOTA를 달성했습니다.
 
 ---
@@ -189,7 +189,7 @@ def calc_map(gt, pred):
 | v8_chunking | 0.8902 | 0.8924 | 512 토큰 초과 문서만 문장 단위 청킹 + overlap=1 | ⬇️ | 청킹 조각들이 Top-K 독점 → Top-K 밀림 현상 발생 |
 | v8-2_BM25_standalone | 0.8803 | 0.8833 | Reranker 후보 15→30, BM25는 원본 쿼리만 | ⬇️ | Nori+HyDE 키워드 조합이 풍부한 어휘를 제공했음을 재확인 |
 | v9_prompt_optimized | 0.8636 | 0.8697 | Few-shot 강화 + RRF 가중치 비대칭 (Sparse 0.65) | ⬇️ | 가중치 비대칭이 성능 저하 주원인. 1:1 유지가 안전 |
-| v10_dongjin_reranker | 0.9038 | 0.9061 | 한국어 특화 Reranker + LLM 키워드 추출 BM25 투입 | ⬆️ | Reranker 후보 줄이면 Cross-encoder 분별력 향상 |
+| **v10_dongjin_reranker** | **0.9038** | **0.9061** | **Reranker를 Dongjin-kr/ko-reranker로 교체** | ⬆️ | **대회 데이터셋처럼 한국어로 번역된 텍스트로 파인튜닝된 Reranker 도입** |
 | **v11_ensemble** | **0.9167** | **0.9152** | **Multi-Query 확장 + ko-reranker & bge-reranker 앙상블 + 2차 검증** | ⬆️ **최종 SOTA** | 다양한 표현의 쿼리 → 재현율 상승. 앙상블로 오류 감소 |
 
 ---
